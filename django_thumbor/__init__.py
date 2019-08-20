@@ -28,7 +28,8 @@ def _remove_schema(url):
 # Deny empty or none url
 def _handle_empty(url):
     if not url:
-        logger.error("Empty URL. Skipping.")
+        # WARN instead of ERROR to avoid logging non-fatal errors to Sentry
+        logger.warn("Empty URL. Skipping.")
         return ""
     return url
 
