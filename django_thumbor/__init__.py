@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
+try:
+    from urllib.parse import quote  # Python 3
+except ImportError:
+    from urllib import quote  # Python 2
+
 from libthumbor import CryptoURL
 from django_thumbor import conf
 from django.conf import settings
 from django.core.files.storage import default_storage
 import logging
 import re
-import urllib
 logger = logging.getLogger(__name__)
 
 
@@ -40,10 +44,10 @@ def _handle_relative(url):
     # to be used with the default storage class. We check this first, because
     # the storage class might return a relative URL that needs further
     # processing.
-    if not re.match(r'^(/|https?(:|%s)//)' % urllib.quote(':'), url):
+    if not re.match(r'^(/|https?(:|%s)//)' % quote(':'), url):
         url = default_storage.url(url)
     # Return absolute URLs as-is.
-    if re.match(r'^https?(:|%s)//' % urllib.quote(':'), url):
+    if re.match(r'^https?(:|%s)//' % quote(':'), url):
         return url
     # We don't have access to a request object, so we have to assume that
     # protocol relative URLs will be available to Thumbor over HTTP.
